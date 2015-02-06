@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Rabies</title>
+    <script src="js/phaser.js"></script>
+    <script src="js/main.js"></script>
+
+<style>
+body
+{
+    color: #777;
+    font-family: "Avenir", Verdana, sans-serif;
+}
+#readme
+{
+    margin-top: 10px;
+}
+</style>
+
+</head>
+<body>
+<div id="game"></div>
+<div id="readme">
+<h2>Rabies</h2>
+<ul>
+
+<li><strong>High Concept:</strong>
+Catch all the dogs before the time runs out.
+</li>
+
+<li><strong>Player Experience Goals:</strong>
+I want the player to think of new ways to 'win' the game and play with that in mind.
+I want the player to enjoy catching the dogs.
+</li>
+
+<li><strong>Genre:</strong>
+The genre of this game is a casual action game.
+</li>
+
+<li><strong>Game play:</strong>
+You can move your player with the arrow keys, he sing his net by pressing spacebar. The dogs casually move around the screen. Every 5 seconds, for ever 2 dogs a new dog is created.
+</li>
+
+<li><strong>Prototype goal:</strong>
+Using different player objectives to see how many different ways you can play one game.EX: how fast you can complete the game, how high a score you can get, trying to finish the game by only catching a certain amount of dogs, ect.
+</li>
+
+<li><strong>Features:</strong>
+One feature of the game is that every 5 seconds two dogs create another dog. This inceases the amount of enimies as you play.
+</li>
+
+<li><strong>Setting/Premise:</strong>
+The setting of the game is at a park.
+</li>
+
+<li><strong>Story:</strong>
+You are bob, who is a dog catcher. Bob recieved a call about ravenous dogs in the park. 
+</li>
+
+<li><strong>Target Audience:</strong>
+The target audience is for anyone trying to pass a short period of time, kids to adults.
+</li>
+
+<li><strong>Play time:</strong>
+90 seconds
+</li>
+
+<li><strong>Strategies:</strong>
+Player stategies for this game would be to concentrate on the area with the most dogs first. If you let there be a lot of dogs then more will apear.
+If the player is going for a high score then they might allow more dogs to appear at the begining.
+</li>
+
+<li><strong>Prototype Assets:</strong>
+I created all of my assest from scratch. Im a coder, not a skecher.
+</li>
+
+<li><strong>Prototype Closest Other Game:</strong>
+I am borrowing the eminey AI idea from Tanks.
+</li>
+
+</ul>
+</div>
+</body>
+</html>
