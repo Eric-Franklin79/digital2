@@ -1,11 +1,28 @@
 window.onload = function() {
     
    "use strict";
-    
-    Tux = function( game){
+    Fighter = function(){
+    	    this.x = 1100;
+    	    this.y = 500;
+    	    this.fighter = game.add.sprite( this.x, this.y, 'tux', 'Stance.png');
+    	    game.physics.enable(this.fighter, Phaser.Physics.ARCADE);
+    	    
+    	    this.fighter.anchor.setTo(0.5, 0.5);
+    	    this.fighter.scale.x = -1;
+    	    this.fighter.body.collideWorld = true;
+    	    this.fighter.animations.add('punch', ['punchMid.png', 'punch.png', 'punchRe.png', 'Stance.png'], 10);
+    	    this.fighter.animations.add('kick', ['kcikStart.png', 'kick.png', 'kick.png','kickDown.png', 'Stance.png'], 10);
+    	    this.fighter.animations.add('dodge', ['dodge.png'], 5, true);
+    	    
+    	    this.fighter.maxHealth = 200;
+    	    this.fighter.health = 200;
+    }
+    Fighter.prototype.update = function(){
+    	    	    
+    }
+    Tux = function(){
     	    this.x = 100;
-    	    this.y = 400;
-    	    this.game = game;
+    	    this.y = 500;
     	    this.tuxMan = game.add.sprite( this.x, this.y, 'tux', 'Stance.png');
     	    game.physics.enable(this.tuxMan, Phaser.Physics.ARCADE);
     	    this.tuxMan.anchor.setTo(0.5, 0.5);
@@ -15,6 +32,7 @@ window.onload = function() {
     	    this.tuxMan.animations.add('dodge', ['dodge.png'], 5, true);
     	    
     	    this.tuxMan.maxHealth = 200;
+    	    this.tuxMan.health = 200;
     }
     Tux.prototype.det = function() {
     	    this.tuxMan.destroy();
@@ -55,11 +73,10 @@ window.onload = function() {
     function preload() {
     	     game.load.atlasJSONHash( 'tux', 'assets/tux.png', 'assets/tux.json' );
     	     game.load.image( 'diner', 'assets/diner.png' );
-       
+    	     game.load.image( 'health', 'assets/health.png' );
         
     }
     var tuxMan;
-    var background;
     var Tux;
     var roundTime = 0;
     var timer;
@@ -72,17 +89,21 @@ window.onload = function() {
     var kick;
     var dodge;
     var tuxMan;
+    var healthbar;
+    var dude;
+    var Fighter;
     
     function create() {
-    	    background = game.add.tileSprite(0,0, 1300, 755, 'diner');
-    	    
-    	    
-    	    
+    	    var background = game.add.tileSprite(0,0, 1300, 755, 'diner');
     	    tuxMan = new Tux(game);
+    	    dude = new Fighter()
+    	    healthbar = game.add.sprite(0,0,'health');
+    	    healthbar.cropEnabled = true;
     	    
-    	    //Time for rounds
+    	    
+    	   //Time for rounds
     	   // var styleT = { font: "35px Verdana", fill: "#FFFFFF", align: "center" };
-    	  //  timeText = game.add.text(300, 200, "Click to Start", styleT);
+    	   // timeText = game.add.text(300, 200, "Click to Start", styleT);
     	    
     	    cursors = game.input.keyboard.createCursorKeys();
     	    game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
@@ -94,6 +115,7 @@ window.onload = function() {
     
     function update() {
     	    gameTime = new Date().getTime();
+    	    healthbar.crop.width = (tuxMan.health / tuxMan.maxHealth) * healthbar.width;
     	    tuxMan.move();
     	    tuxMan.fight();
     }
