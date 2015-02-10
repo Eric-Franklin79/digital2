@@ -2,23 +2,56 @@ window.onload = function() {
     
    "use strict";
     Fighter = function(){
-    	    this.x = 1100;
+    	    this.x = 1200;
     	    this.y = 500;
+    	    this.health = 200;
+    	    this.actionFin = true;
     	    this.fighter = game.add.sprite( this.x, this.y, 'tux', 'Stance.png');
     	    game.physics.enable(this.fighter, Phaser.Physics.ARCADE);
     	    
     	    this.fighter.anchor.setTo(0.5, 0.5);
     	    this.fighter.scale.x = -1;
-    	    this.fighter.body.collideWorld = true;
+    	    this.fighter.body.collideWorldBounds = true;
     	    this.fighter.animations.add('punch', ['punchMid.png', 'punch.png', 'punchRe.png', 'Stance.png'], 10);
     	    this.fighter.animations.add('kick', ['kcikStart.png', 'kick.png', 'kick.png','kickDown.png', 'Stance.png'], 10);
     	    this.fighter.animations.add('dodge', ['dodge.png'], 5, true);
     	    
     	    this.fighter.maxHealth = 200;
-    	    this.fighter.health = 200;
+    	    
+    }
+    Fighter.prototype.reset = function(){
+    	    this.fighter.reset(this.x, this.y, 200);
     }
     Fighter.prototype.update = function(){
+    	    this.fighter.health = this.health;
+    	    this.fight = Math.random()*(6-0);
+    	    this.move = Math.random()*(6-0);
+    	    
+    	    
+    	    if((Math.floor((gameTime - roundTime)*.01)%5=== 0)){
     	    	    
+    	    	    
+		    if(this.move < 2){
+			    this.fighter.body.velocity.x = 0;
+		    }
+		    else if(this.move < 4){
+			    this.fighter.body.velocity.x = 100;
+			    if(this.fighter.x === 1300){
+				    this.fighter.body.velocity.x = 0;
+			    }
+		    }
+		    else{
+			  this.fighter.body.velocity.x = -300;
+			    if(this.fighter.x - tuxMan.tuxMan.x < 250){
+				 if(this.fight < 4){
+				 	this.fighter.animations.play('punch');	 
+				 }
+				 else{
+				 	this.fighter.animations.play('kick'); 
+				 }
+			    }
+		    }
+    	    }
     }
     Tux = function(){
     	    this.x = 100;
@@ -26,13 +59,17 @@ window.onload = function() {
     	    this.tuxMan = game.add.sprite( this.x, this.y, 'tux', 'Stance.png');
     	    game.physics.enable(this.tuxMan, Phaser.Physics.ARCADE);
     	    this.tuxMan.anchor.setTo(0.5, 0.5);
-    	    this.tuxMan.body.collideWorld = true;
+    	    this.tuxMan.body.collideWorldBounds = true;
+    	    
     	    this.tuxMan.animations.add('punch', ['punchMid.png', 'punch.png', 'punchRe.png', 'Stance.png'], 10);
     	    this.tuxMan.animations.add('kick', ['kcikStart.png', 'kick.png', 'kick.png','kickDown.png', 'Stance.png'], 10);
     	    this.tuxMan.animations.add('dodge', ['dodge.png'], 5, true);
     	    
     	    this.tuxMan.maxHealth = 200;
     	    this.tuxMan.health = 200;
+    }
+    Tux.prototype.reset = function(){
+    	    this.tuxMan.reset(this.x, this.y, 200);
     }
     Tux.prototype.det = function() {
     	    this.tuxMan.destroy();
@@ -64,7 +101,7 @@ window.onload = function() {
     	    	    //try to get acceleration and deceleration
     	    }
     	    if(cursors.up.isDown){
-    	    	    this.tuxMan.body.velocity.y = -200;
+    	    	    this.tuxMan.body.velocity.y = -1000;
     	    }
     }
     
@@ -78,67 +115,97 @@ window.onload = function() {
     }
     var tuxMan;
     var Tux;
-    var roundTime = 0;
-    var timer;
+    var roundTime = new Date().getTime();;
+    var timer = 90;
     var gameTime;
-    var rountCount = 1;
+    var roundCount = 1, winCount = 0;
     var cursors;
-    var timeText;
+    var timeText, roundTimeText;
     var pause;
     var punch;
     var kick;
     var dodge;
     var tuxMan;
-    var healthbar;
+    var healthbar, fighterHealthbar;
     var dude;
     var Fighter;
+    var fighterHit = false;
     
     function create() {
+    	    game.physics.startSystem(Phaser.Physics.ARCADE);
+    	    game.physics.arcade.gravity.y = 1000;
     	    var background = game.add.tileSprite(0,0, 1300, 755, 'diner');
+    	    game.world.setBounds(0,0, 1300, 755);
     	    tuxMan = new Tux(game);
     	    dude = new Fighter()
-    	    healthbar = game.add.sprite(0,0,'health');
+    	    healthbar = game.add.sprite(0,25,'health');
     	    healthbar.cropEnabled = true;
+    	    fighterHealthbar = game.add.sprite(800,25,'health');
+    	    fighterHealthbar.cropEnabled = true;
     	    
-    	    
-    	   //Time for rounds
-    	   // var styleT = { font: "35px Verdana", fill: "#FFFFFF", align: "center" };
-    	   // timeText = game.add.text(300, 200, "Click to Start", styleT);
-    	    
+    	    //Create all the text that we need
+    	    var styleT = { font: "50px Verdana", fill: "#000000", align: "center" };
+    	    roundTimeText = game.add.text(650, 10, String(timer), styleT);
+    	   
+    	   
+    	   
+    	    //Create the keys that we need to use cursors, space, Q, W, E
     	    cursors = game.input.keyboard.createCursorKeys();
     	    game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
     	    pause = game.input.keyboard.addKey(Phaser.Keyboard.SPACEBAR);
     	    punch = game.input.keyboard.addKey(Phaser.Keyboard.Q);
     	    kick = game.input.keyboard.addKey(Phaser.Keyboard.W);
     	    dodge = game.input.keyboard.addKey(Phaser.Keyboard.E);
+    	    
+    	    
+    	    
     }
     
     function update() {
     	    gameTime = new Date().getTime();
-    	    healthbar.crop.width = (tuxMan.health / tuxMan.maxHealth) * healthbar.width;
+    	    if(game.physics.arcade.collide(tuxMan.tuxMan, dude.fighter)){
+    	    	hit();	    
+    	    }
+    	    
     	    tuxMan.move();
     	    tuxMan.fight();
+    	    dude.update();
+    	    updateTimer();
     }
     function updateTimer(){
     	    timer = 90 - Math.floor((gameTime-roundTime)*.001);
-    	    timeText.x = game.world.centerX;
-    	    timeText.y = 10;
-    	    timeText.setText(String(timer));
+    	    roundTimeText.x = game.world.centerX;
+    	    roundTimeText.y = 10;
+    	    roundTimeText.setText(String(timer));
     	    if(timer < 0){roundOver()} 
     }
     function roundOver(){
-    	    if(roundCount === 3){
-    	    	    //game over
+    	    if((roundCount === 3)||(winCount == 2)){
+    	    	    gameOver();
     	    }
     	    else{
     	    	    newRound();
-    	    	    rountCount++;
+    	    	    roundCount++;
     	    }
     }
     function newRound(){
     	    roundTime = new Date().getTime();
-    	//reset sprites
-    	//reset health
-    	//reset timer
+    	    tuxMan.reset();
+    	    dude.reset();
+    	    fighterHealthbar.reset(800,25);
+    	    healthbar.reset(0, 25);
+    }
+    function gameOver(){
+    	    if(winCount == 2){
+    	    	    //win condition
+    	    }
+    	    else{
+    	    	    //loose condition
+    	    }
+    }
+    function hit(){
+    	 fighterHealthbar.x += 20;  
+    	 fighterHit = true;
+    	 
     }
 };
