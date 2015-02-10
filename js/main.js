@@ -81,11 +81,11 @@ window.onload = function() {
     	    	   this.tuxMan.animations.play('dodge');
     	    	   tuxFighting = true;
     	    }
-    	    else if(kick.isDown){
+    	    else if(kick.downDuration(50)){
     	    	   this.tuxMan.animations.play('kick');    
     	    	   tuxFighting = true;
     	    }
-    	    else if(punch.isDown){
+    	    else if(punch.downDuration(50)){
     	    	   this.tuxMan.animations.play('punch');
     	    	   tuxFighting = true;
     	    }
