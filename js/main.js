@@ -49,7 +49,9 @@ window.onload = function() {
 				 else{
 				 	this.fighter.animations.play('kick'); 
 				 }
+				 dudeFighting = true;
 			    }
+			    dudeFighting = false;
 		    }
     	    }
     }
@@ -77,15 +79,19 @@ window.onload = function() {
     Tux.prototype.fight = function() {
     	    if(dodge.isDown){
     	    	   this.tuxMan.animations.play('dodge');
+    	    	   tuxFighting = true;
     	    }
     	    else if(kick.isDown){
     	    	   this.tuxMan.animations.play('kick');    
+    	    	   tuxFighting = true;
     	    }
     	    else if(punch.isDown){
     	    	   this.tuxMan.animations.play('punch');
+    	    	   tuxFighting = true;
     	    }
     	    else{
     	    	this.tuxMan.loadTexture('tux', 'Stance.png');    
+    	    	tuxFighting = false;
     	    }
     }
     Tux.prototype.move = function() {
@@ -129,26 +135,26 @@ window.onload = function() {
     var healthbar, fighterHealthbar;
     var dude;
     var Fighter;
-    var fighterHit = false;
+    var fighterHit = false, dudeFighting = false, tuxFighting = false;
     
     function create() {
     	    game.physics.startSystem(Phaser.Physics.ARCADE);
     	    game.physics.arcade.gravity.y = 1000;
     	    var background = game.add.tileSprite(0,0, 1300, 755, 'diner');
     	    game.world.setBounds(0,0, 1300, 755);
-    	    tuxMan = new Tux(game);
-    	    dude = new Fighter()
+    	    
     	    healthbar = game.add.sprite(0,25,'health');
-    	    healthbar.cropEnabled = true;
     	    fighterHealthbar = game.add.sprite(800,25,'health');
-    	    fighterHealthbar.cropEnabled = true;
     	    
     	    //Create all the text that we need
-    	    var styleT = { font: "50px Verdana", fill: "#000000", align: "center" };
-    	    roundTimeText = game.add.text(650, 10, String(timer), styleT);
-    	   
-    	   
-    	   
+    	    var styleT = { font: "bold 50px Verdana", fill: "#000000", align: "center" };
+    	    roundTimeText = game.add.text(550, 10, String(timer), styleT);
+    	    var styleH = { font: "20px Verdana", fill: "#000000", align: "center" };
+    	    var punchText = game.add.text(350, 175, "Q - Punch", styleH);
+    	    var kickText = game.add.text(500, 175, "W - Kick", styleH);
+    	    var dodgeText = game.add.text(650, 175, "E - Dodge", styleH);
+    	    var moveText = game.add.text(800, 175, "<--/--> - move left/right", styleH);
+    	    
     	    //Create the keys that we need to use cursors, space, Q, W, E
     	    cursors = game.input.keyboard.createCursorKeys();
     	    game.input.keyboard.addKeyCapture([Phaser.Keyboard.SPACEBAR]);
@@ -157,6 +163,8 @@ window.onload = function() {
     	    kick = game.input.keyboard.addKey(Phaser.Keyboard.W);
     	    dodge = game.input.keyboard.addKey(Phaser.Keyboard.E);
     	    
+    	    tuxMan = new Tux(game);
+    	    dude = new Fighter()
     	    
     	    
     }
@@ -204,7 +212,12 @@ window.onload = function() {
     	    }
     }
     function hit(){
-    	 fighterHealthbar.x += 20;  
+    	 if(dudeFighting){
+    	 	healthbar.x -= 20;	 
+    	 }
+    	 if(tuxFighting){
+    	 	 fighterHealthbar.x += 20;  
+    	 }
     	 fighterHit = true;
     	 
     }
