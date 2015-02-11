@@ -4,7 +4,7 @@ window.onload = function() {
     Fighter = function(){
     	    this.x = 1200;
     	    this.y = 500;
-    	    this.health = 200;
+    	    this.health = 500;
     	    this.actionFin = true;
     	    this.fighter = game.add.sprite( this.x, this.y, 'tux', 'Stance.png');
     	    game.physics.enable(this.fighter, Phaser.Physics.ARCADE);
@@ -16,13 +16,18 @@ window.onload = function() {
     	    this.fighter.animations.add('kick', ['kcikStart.png', 'kick.png', 'kick.png','kickDown.png', 'Stance.png'], 10);
     	    this.fighter.animations.add('dodge', ['dodge.png'], 5, true);
     	    
-    	    this.fighter.maxHealth = 200;
+    	    this.fighter.maxHealth = 500;
     	    
     }
     Fighter.prototype.reset = function(){
     	    this.fighter.reset(this.x, this.y, 200);
     }
+    Fighter.prototype.die = function(){
+    	    this.fighter.body.rotation += 30;
+    	    this.fighter.kill();
+    }
     Fighter.prototype.update = function(){
+    	    this.fighter.body.collideWorldBounds = true;
     	    this.fighter.health = this.health;
     	    this.fight = Math.random()*(6-0);
     	    this.move = Math.random()*(6-0);
@@ -81,11 +86,11 @@ window.onload = function() {
     	    	   this.tuxMan.animations.play('dodge');
     	    	   tuxFighting = true;
     	    }
-    	    else if(kick.downDuration(50)){
+    	    else if(kick.downDuration(250)){
     	    	   this.tuxMan.animations.play('kick');    
     	    	   tuxFighting = true;
     	    }
-    	    else if(punch.downDuration(50)){
+    	    else if(punch.downDuration(250)){
     	    	   this.tuxMan.animations.play('punch');
     	    	   tuxFighting = true;
     	    }
@@ -215,8 +220,16 @@ window.onload = function() {
     	 if(dudeFighting){
     	 	healthbar.x -= 20;	 
     	 }
-    	 if(tuxFighting){
+    	 if(dodge.isDown){
+    	 	 healthbar.x -= 5;  
+    	 }
+    	 else if(punch.downDuration(10) || kick.downDuration(10)){
     	 	 fighterHealthbar.x += 20;  
+    	 	 dude.health -= 20;
+    	 	 if(dude.health === 0){
+    	 	 	dude.die();
+    	 	 	roundOver();
+    	 	 }
     	 }
     	 fighterHit = true;
     	 
