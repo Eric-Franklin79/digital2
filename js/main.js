@@ -281,7 +281,7 @@ window.onload = function() {
     //Check damage 
     function hit(){
     	 if(dudeFighting){
-    	 	 if((Math.floor((gameTime - roundTime)*.01)%5=== 0)){
+    	 	 if((Math.floor((gameTime - roundTime)*.01)%3=== 0)){
     	 	 	 if(dodge.isDown){
     	 	 	 	 healthbar.x -= 5;
     	 	 	 	 tuxMan.health -= 5;
