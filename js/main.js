@@ -6,21 +6,19 @@ window.onload = function() {
     	    this.y = 500;
     	    this.health = 500;
     	    this.actionFin = true;
-    	    this.fighter = game.add.sprite( this.x, this.y, 'tux', 'Stance.png');
+    	    this.fighter = game.add.sprite( this.x, this.y, 'dude', 'StanceD.png');
     	    game.physics.enable(this.fighter, Phaser.Physics.ARCADE);
-    	    
     	    this.fighter.anchor.setTo(0.5, 0.5);
     	    this.fighter.scale.x = -1;
     	    this.fighter.body.collideWorldBounds = true;
-    	    this.fighter.animations.add('punch', ['punchMid.png', 'punch.png', 'punchRe.png', 'Stance.png'], 10);
-    	    this.fighter.animations.add('kick', ['kcikStart.png', 'kick.png', 'kick.png','kickDown.png', 'Stance.png'], 10);
-    	    this.fighter.animations.add('dodge', ['dodge.png'], 5, true);
-    	    
+    	    this.fighter.animations.add('punch', ['punchMidD.png', 'punchD.png', 'punchReD.png', 'StanceD.png'], 10);
+    	    this.fighter.animations.add('kick', ['kcikStartD.png', 'kickD.png', 'kickD.png','kickDownD.png', 'StanceD.png'], 10);
+    	    this.fighter.animations.add('dodge', ['dodgeD.png'], 5, true);
     	    this.fighter.maxHealth = 500;
     	    
     }
     Fighter.prototype.reset = function(){
-    	    this.fighter.reset(this.x, this.y, 200);
+    	    this.fighter.reset(this.x, this.y, 500);
     }
     Fighter.prototype.die = function(){
     	    this.fighter.body.rotation += 30;
@@ -31,19 +29,17 @@ window.onload = function() {
     	    this.fighter.health = this.health;
     	    this.fight = Math.random()*(6-0);
     	    this.move = Math.random()*(6-0);
-    	    
-    	    
     	    if((Math.floor((gameTime - roundTime)*.01)%5=== 0)){
-    	    	    
-    	    	    
 		    if(this.move < 2){
 			    this.fighter.body.velocity.x = 0;
+			    dudeFighting = false;
 		    }
 		    else if(this.move < 4){
 			    this.fighter.body.velocity.x = 100;
 			    if(this.fighter.x === 1300){
 				    this.fighter.body.velocity.x = 0;
 			    }
+			    dudeFighting = false;
 		    }
 		    else{
 			  this.fighter.body.velocity.x = -300;
@@ -54,15 +50,16 @@ window.onload = function() {
 				 else{
 				 	this.fighter.animations.play('kick'); 
 				 }
-				 dudeFighting = true;
+				 	 dudeFighting = true;
 			    }
-			    dudeFighting = false;
+			    
 		    }
     	    }
     }
     Tux = function(){
     	    this.x = 100;
     	    this.y = 500;
+    	    this.health = 500;
     	    this.tuxMan = game.add.sprite( this.x, this.y, 'tux', 'Stance.png');
     	    game.physics.enable(this.tuxMan, Phaser.Physics.ARCADE);
     	    this.tuxMan.anchor.setTo(0.5, 0.5);
@@ -72,14 +69,15 @@ window.onload = function() {
     	    this.tuxMan.animations.add('kick', ['kcikStart.png', 'kick.png', 'kick.png','kickDown.png', 'Stance.png'], 10);
     	    this.tuxMan.animations.add('dodge', ['dodge.png'], 5, true);
     	    
-    	    this.tuxMan.maxHealth = 200;
-    	    this.tuxMan.health = 200;
+    	    this.tuxMan.maxHealth = 500;
+    	    
     }
     Tux.prototype.reset = function(){
     	    this.tuxMan.reset(this.x, this.y, 200);
     }
-    Tux.prototype.det = function() {
-    	    this.tuxMan.destroy();
+    Tux.prototype.die = function(){
+    	    this.tuxMan.body.rotation -= 30;
+    	    this.tuxMan.kill();
     }
     Tux.prototype.fight = function() {
     	    if(dodge.isDown){
@@ -100,6 +98,7 @@ window.onload = function() {
     	    }
     }
     Tux.prototype.move = function() {
+    	    this.tuxMan.health = this.health;
     	    if(cursors.left.isDown){
     	    	    this.tuxMan.body.velocity.x = -200;
     	    }
@@ -120,6 +119,7 @@ window.onload = function() {
     
     function preload() {
     	     game.load.atlasJSONHash( 'tux', 'assets/tux.png', 'assets/tux.json' );
+    	     game.load.atlasJSONHash( 'dude', 'assets/dude.png', 'assets/dude.json' );
     	     game.load.image( 'diner', 'assets/diner.png' );
     	     game.load.image( 'health', 'assets/health.png' );
        	     game.load.image( 'gameOver', 'assets/gameOver.png' );
@@ -234,7 +234,7 @@ window.onload = function() {
     	    roundTimeText.setText(String(timer));
     	    if(timer < 0){roundOver()} 
     }
-    //Check to see
+    //Check to see condiction
     function roundOver(){
     	    if((roundCount === 3)||(winCount == 2)){
     	    	    end = true;
@@ -250,6 +250,10 @@ window.onload = function() {
 			    fighterHealthbar.kill();
 			    healthbar.kill();
 			    dude.die();
+			    var endSty = { font: "bold 60px Verdana", fill: "#424242", align: "center" };
+			    game.add.text(300, 140, "CONGRATULATIONS!", endSty);
+			    tuxMan.tuxMan.body.velocity.x = 0;
+			    tuxMan.tuxMan.x = 755;
 		    }
 		    else{
 			   var background = game.add.tileSprite(0,0, 1300, 755, 'gameOver');
@@ -269,6 +273,7 @@ window.onload = function() {
 		    fighterHealthbar.reset(800,25);
 		    healthbar.reset(0, 25);
 		    dude.health = 500;
+		    tuxMan.health = 500;
     	    	    roundCount++;
     	    	    roundText.setText("Round: " + String(roundCount));
     	    }
@@ -276,12 +281,22 @@ window.onload = function() {
     //Check damage 
     function hit(){
     	 if(dudeFighting){
-    	 	healthbar.x -= 20;	 
+    	 	 if((Math.floor((gameTime - roundTime)*.01)%5=== 0)){
+    	 	 	 if(dodge.isDown){
+    	 	 	 	 healthbar.x -= 5;
+    	 	 	 	 tuxMan.health -= 5;
+    	 	 	 }
+    	 	 	 else{
+    	 	 	 healthbar.x -= 20;
+    	 	 	 tuxMan.health -= 20;
+    	 	 	 }
+    	 	 	 if(tuxMan.health === 0){
+    	 	 	 	tuxMan.die();
+    	 	 	 	roundOver();
+    	 	 	 }
+    	 	}
     	 }
-    	 if(dodge.isDown){
-    	 	 healthbar.x -= 5;  
-    	 }
-    	 else if(punch.downDuration(10) || kick.downDuration(10)){
+    	 if(punch.downDuration(10) || kick.downDuration(10)){
     	 	 fighterHealthbar.x += 20;  
     	 	 dude.health -= 20;
     	 	 if(dude.health === 0){
