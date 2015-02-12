@@ -110,9 +110,9 @@ window.onload = function() {
     	    	    //load default texture?
     	    	    //try to get acceleration and deceleration
     	    }
-    	    if(cursors.up.isDown){
-    	    	    this.tuxMan.body.velocity.y = -1000;
-    	    }
+    	    //if(cursors.up.isDown){
+    	   // 	    this.tuxMan.body.velocity.y = -1000;
+    	   // }
     }
     
     var game = new Phaser.Game( 1300, 755, Phaser.AUTO, 'game', { preload: preload, create: create, update: update } );
@@ -283,12 +283,12 @@ window.onload = function() {
     	 if(dudeFighting){
     	 	 if((Math.floor((gameTime - roundTime)*.01)%3=== 0)){
     	 	 	 if(dodge.isDown){
-    	 	 	 	 healthbar.x -= 5;
-    	 	 	 	 tuxMan.health -= 5;
+    	 	 	 	 healthbar.x -= 1;
+    	 	 	 	 tuxMan.health -= 1;
     	 	 	 }
     	 	 	 else{
-    	 	 	 healthbar.x -= 20;
-    	 	 	 tuxMan.health -= 20;
+    	 	 	 healthbar.x -= 10;
+    	 	 	 tuxMan.health -= 10;
     	 	 	 }
     	 	 	 if(tuxMan.health === 0){
     	 	 	 	tuxMan.die();
@@ -297,8 +297,8 @@ window.onload = function() {
     	 	}
     	 }
     	 if(punch.downDuration(10) || kick.downDuration(10)){
-    	 	 fighterHealthbar.x += 20;  
-    	 	 dude.health -= 20;
+    	 	 fighterHealthbar.x += 10;  
+    	 	 dude.health -= 10;
     	 	 if(dude.health === 0){
     	 	 	dude.die();
     	 	 	winCount++;
